@@ -1,0 +1,9 @@
+{
+  "name": "MAVERIC - AI-Driven Management Platform",
+  "description": "A comprehensive smart management platform for individuals, wards, and guardians featuring health tracking, finance management, meal planning, and AI-driven insights.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone",
+    "geolocation"
+  ]
+}
