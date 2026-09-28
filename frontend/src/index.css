@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+@import "tailwindcss";
+
+:root {
+	font-family: 'DM Sans', sans-serif;
+	color: #e2e8f0;
+	background: #07111f;
+	font-synthesis: none;
+	text-rendering: optimizeLegibility;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+	min-width: 320px;
+	min-height: 100vh;
+	margin: 0;
+	background:
+		radial-gradient(circle at 15% 0%, rgba(14, 165, 233, 0.08), transparent 28rem),
+		radial-gradient(circle at 90% 12%, rgba(16, 185, 129, 0.05), transparent 24rem),
+		#07111f;
+}
+
+button, input, textarea, select { font: inherit; }
+button, a { -webkit-tap-highlight-color: transparent; }
+button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
+	outline: 2px solid #22d3ee;
+	outline-offset: 2px;
+}
+h1, h2, h3, h4, h5, h6 { font-family: 'Space Grotesk', sans-serif; }
+::selection { color: #ecfeff; background: rgba(6, 182, 212, 0.35); }
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: #0b1728; }
+::-webkit-scrollbar-thumb { background: #24364d; border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: #31516d; }
+.page-surface { width: 100%; max-width: 1440px; margin-inline: auto; }
