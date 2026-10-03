@@ -1,0 +1,72 @@
+version: '3.9'
+
+services:
+  # ─── Application (Express + React build) ────────────────────────────────────
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: production
+      PORT: 5000
+      # PostgreSQL — use Docker service name, not localhost
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ${POSTGRES_DB}
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      # MongoDB — use Docker service name, not localhost
+      MONGODB_URI: mongodb://mongo:27017/${MONGO_DATABASE}
+      # JWT
+      JWT_SECRET: ${JWT_SECRET}
+      # CORS origins for local testing (comma-separated)
+      CORS_ORIGINS: ${CORS_ORIGINS:-}
+      # Mailer / AI keys are loaded from .env via env_file above
+    ports:
+      # Expose for local testing — remove / replace with a reverse-proxy in prod
+      - "5000:5000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mongo:
+        condition: service_healthy
+
+  # ─── PostgreSQL ───────────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    # Do NOT publish port 5432 — only the app container needs it
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  # ─── MongoDB ─────────────────────────────────────────────────────────────────
+  mongo:
+    image: mongo:7.0
+    restart: unless-stopped
+    volumes:
+      - mongo_data:/data/db
+    # Do NOT publish port 27017 — only the app container needs it
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+# ─── Named volumes (persist data across container restarts) ───────────────────
+volumes:
+  postgres_data:
+  mongo_data:

@@ -627,7 +627,7 @@ interface Props {
 
 const API_BASE =
   (typeof import.meta !== 'undefined' && (import.meta as any).env?.VITE_API_BASE_URL) ||
-  'http://localhost:5000';
+  '';
 
 const makeId = () =>
   typeof crypto !== 'undefined' && 'randomUUID' in crypto

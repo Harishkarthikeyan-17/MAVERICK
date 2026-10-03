@@ -8,11 +8,21 @@ export default defineConfig(({ mode }) => {
       server: {
         port: 3000,
         host: '0.0.0.0',
+        // ── Development proxy ──────────────────────────────────────────────────
+        // Forwards /api/* requests to the Express dev server so the Vite dev
+        // server on :3000 can reach the API on :5000 without CORS issues.
+        // This proxy is ONLY active during `npm run dev` — it has no effect on
+        // the production build served by Express directly.
+        proxy: {
+          '/api': {
+            target: 'http://localhost:5000',
+            changeOrigin: true,
+            // Do not rewrite — keep /api prefix so Express routes match.
+          },
+        },
       },
       plugins: [react()],
       define: {
-        'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
-        'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY)
       },
       resolve: {
         alias: {

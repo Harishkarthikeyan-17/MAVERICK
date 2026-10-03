@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { generateCompletion, generateChat } = require('../ai/groqClient');
-
+const { getAISuggestion } = require('../ai/geminiClient');
 // POST /api/ai/generate-recipe
 router.post('/generate-recipe', async (req, res) => {
   const { mode, dishName, cuisine, dietPreference, cookingTime, modifiers, ingredients, variation } = req.body;
@@ -315,6 +315,42 @@ Return ONLY a valid JSON array of 7 arrays, where each inner array has exactly 4
   } catch (err) {
     console.error('[MEAL PLAN AI ERROR]', err.message);
     res.status(500).json({ error: 'Failed to generate meal plan.' });
+  }
+});
+
+// POST /api/ai/gemini/health
+router.post('/gemini/health', async (req, res) => {
+  const { symptoms } = req.body;
+  try {
+    const reply = await getAISuggestion("Health Monitoring", `User symptoms: ${symptoms}. Provide non-emergency health advice.`);
+    res.json({ reply });
+  } catch (err) {
+    console.error('[GEMINI HEALTH ERROR]', err);
+    res.status(500).json({ error: 'Failed to generate health suggestion.' });
+  }
+});
+
+// POST /api/ai/gemini/finance
+router.post('/gemini/finance', async (req, res) => {
+  const { concern, data } = req.body;
+  try {
+    const reply = await getAISuggestion("Finance Tracking", `User concern: ${concern}. Current Financials: ${JSON.stringify(data)}.`);
+    res.json({ reply });
+  } catch (err) {
+    console.error('[GEMINI FINANCE ERROR]', err);
+    res.status(500).json({ error: 'Failed to generate finance suggestion.' });
+  }
+});
+
+// POST /api/ai/gemini/meal-plan
+router.post('/gemini/meal-plan', async (req, res) => {
+  const { ingredients, profile } = req.body;
+  try {
+    const reply = await getAISuggestion("Meal Planning", `Ingredients available: ${ingredients}. Health profile: ${profile}. Suggest a balanced meal.`);
+    res.json({ reply });
+  } catch (err) {
+    console.error('[GEMINI MEAL PLAN ERROR]', err);
+    res.status(500).json({ error: 'Failed to generate meal plan suggestion.' });
   }
 });
 

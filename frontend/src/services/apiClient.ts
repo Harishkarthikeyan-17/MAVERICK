@@ -1,6 +1,6 @@
 import { getToken } from './authService';
 
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 interface RequestOptions extends RequestInit {
   data?: any;

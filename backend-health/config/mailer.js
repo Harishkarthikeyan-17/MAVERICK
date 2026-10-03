@@ -10,7 +10,8 @@ const transporter = nodemailer.createTransport({
 });
 
 const sendPasswordResetEmail = async (toEmail, resetToken) => {
-  const resetLink = `http://localhost:5173/reset-password?token=${resetToken}`;
+  const appUrl = process.env.APP_URL || 'http://localhost:3000';
+  const resetLink = `${appUrl}/reset-password?token=${resetToken}`;
 
   await transporter.sendMail({
     from: `"MAVERICK Security" <${process.env.EMAIL_USER}>`,
